@@ -2,9 +2,230 @@
 <html>
   <head>
     <title>Page Title</title>
-    <script src="../yz_design_system/components/yz_card.js"></script>
+    <script type="module" src="../yz_design_system/src/yds.mjs"></script>
+    <!-- <script src="../yz_design_system/build/yds.min.js"></script> -->
+    <!-- <script src="../yz_design_system/yds.min.js"></script> -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+      html {
+        min-height: 100vh;
+      }
+      body {
+        min-height: 100vh;
+        min-width: 100%;
+        display: flex;
+        margin: 0px;
+      }
+      body {
+        /* font-family: Circular, -apple-system, BlinkMacSystemFont, Roboto, Helvetica Neue, sans-serif;  */
+        /* font-family: Helvetica Neue, sans-serif;  */
+        font-family: 'Open Sans', sans-serif;
+      }
+      h1 {
+        font-weight: bold;
+        font-size: 32px;
+        margin: 0;
+      }
+      h2 {
+        font-weight: bold;
+        font-size: 24px;
+        margin: 0;
+      }
+      h3 {
+        font-weight: bold;
+        font-size: 20px;
+        margin: 0;
+      }
+      h4 {
+        font-weight: bold;
+        font-size: 16px;
+        margin: 0;
+      }
+      h5 {
+        font-weight: bold;
+        font-size: 14px;
+        margin: 0;
+      }
+      p {
+        margin: 0;
+      }
+      .center-content {
+        width: 100%;
+        max-width: 900px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+    </style>
+    <script src="https://kit.fontawesome.com/6f86cd57f1.js" crossorigin="anonymous"></script>
+    <script type="application/javascript">
+      function memoizer(fun){
+        let cache = {}
+        return function (n) {
+          if (cache[n] != undefined) {
+            return cache[n]
+          } else {
+            let result = fun(n)
+            cache[n] = result
+            return result
+          }
+        }
+      }
+
+      (function(history){
+        var pushState = history.pushState;
+        history.pushState = function(state) {
+          if (state == window.history.state) {
+            return null;
+          }
+          var result = pushState.apply(history, arguments);
+          if (typeof history.onpushstate == "function") {
+            history.onpushstate({state: state});
+          }
+          return result;
+        };
+      })(window.history);
+    </script>
+    <script>
+      var parentContent = null;
+      var homeRoute = null;
+      window.onload = function() {
+        homeRoute = document.getElementById("main-content");
+        parentContent = homeRoute.parentElement;
+      }
+
+      function router(route) {
+        if (route == null) {
+          route = '/';
+        }
+        const routingTable = {
+          'login' : () => {
+            var loginContent = document.createElement("div");
+            loginContent.innerHTML = `
+            <yds-horizontal-card-layout 
+              title="Logging In"
+              subtitle="If you are the sort of person who just can not keep a plant alive, you are not alone according to a new study published June 10 in the journal Nature.."
+              author="Alexander Parkinson"
+              authorSubtitle="June 20, 2019"
+              >
+            </yds-horizontal-card-layout>
+            `;
+            loginContent.id = "main-content";
+            return loginContent;
+          }
+        }
+        return routingTable[route] != null ? routingTable[route]() : homeRoute;
+      }
+      const routerMemoized = memoizer(router);
+
+      function updateDomWithRoute(route) {
+        console.log(`Changing to route: ${route != undefined && route != null && route != "" ? route : "Home"}`);
+        parentContent.replaceChild(routerMemoized(route), document.getElementById("main-content"));
+      }
+
+      window.onpopstate = history.onpushstate = function(event) {
+        updateDomWithRoute(window.history.state);
+      }
+    </script>
   </head>
   <body>
-    <yz-card></yz-card>
+    <yds-scaffold>
+      <yds-pagelet-header slot="header" content-width=900 style="background-color: white; min-height: 60px;">
+        <!-- onclick="location.href='/test'" -->
+        <yds-pressable-overlay 
+          slot="left-content" 
+          style="margin-top: auto; margin-bottom: auto;"
+          onclick="window.history.pushState('', 'Home', '/examples/') /* TODO: routing wonky here */">
+          <h3>Yuzu</h3>
+        </yds-pressable-overlay>
+        <yds-pressable-overlay slot="right-content" style="margin-top: auto; margin-bottom: auto;" onclick="window.history.pushState('login', 'Login', '/login')">
+          <h4>Become a host</h4>
+        </yds-pressable-overlay>
+
+        <yds-dialog-controller slot="right-content">
+          <yds-pressable-overlay slot="toggle" style="padding: 6px;" overlay-border-radius="18px">
+            <i class="fas fa-user-circle" style="font-size: 24px;"></i>
+          </yds-pressable-overlay>
+          <yds-card slot="dialog" style="width: 200px; height: 200px; background-color: white; top: 10px;">
+            <div>Hello</div>
+          </yds-card>
+        </yds-dialog-controller>
+      </yds-pagelet-header>
+
+      <div class="center-content" id="main-content">
+        <div style="margin-top: 20px; margin-bottom: 60px;">
+          <yds-pressable-shadow 
+            noBorder="true"
+            shadow="0px 2px 10px 0px rgba(80,80,80,1)"
+            style="
+              height: 350px; 
+              padding: 0px; 
+              margin-bottom: 20px; 
+              background-image: url('img/photo-1598544769561-b79f32b3b878.jpg');
+              background-size: cover;
+              background-position: center center;
+              border: none;
+              ">
+            <div style="display: flex; flex-direction: row; align-items: stretch; height: 100%;">
+              <div style="width: 384px; padding-left: 64px; padding-top: 64px; padding-bottom: 48px;">
+                <h1 style="color: white">
+                  Get out and stretch your imagination
+                </h1>
+              </div>
+            </div>
+          </yds-pressable-shadow >
+          <div style="display: flex; flex-direction: row; height: 300px; ">
+            <yds-pressable-shadow  style="width: calc(33.33% - 13.33px); padding: 0px; margin-right: 20px;">
+            </yds-pressable-shadow >
+            <yds-pressable-shadow  style="width: calc(33.33% - 13.33px); padding: 0px; margin-right: 20px;">
+            </yds-pressable-shadow >
+            <yds-pressable-shadow  style="width: calc(33.33% - 13.33px); padding: 0px;">
+            </yds-pressable-shadow >
+          </div>
+        </div>
+      </div>
+
+      <div style="background-color: black; margin-bottom: 60px;">
+        <div 
+          style="height: 400px; margin-top: 20px;"
+          class="center-content">
+          <div style="height: 400px;">
+          </div>
+        </div>
+      </div>
+
+      <div class="center-content">
+
+        <yds-horizontal-card-layout 
+          title="Green plants are going Extinct about 500 times faster than they should, Study finds"
+          subtitle="If you are the sort of person who just can not keep a plant alive, you are not alone according to a new study published June 10 in the journal Nature.."
+          author="Alexander Parkinson"
+          authorSubtitle="June 20, 2019"
+          >
+        </yds-horizontal-card-layout>
+
+        <div style="display: flex; flex-direction: row; height: 300px; ">
+          <yds-pressable-shadow style="width: calc(33.33% - 13.33px); padding: 0px; margin-right: 20px;">
+          </yds-pressable-shadow>
+          <yds-pressable-shadow style="width: calc(33.33% - 13.33px); padding: 0px; margin-right: 20px;">
+          </yds-pressable-shadow>
+          <yds-pressable-shadow style="width: calc(33.33% - 13.33px); padding: 0px;">
+          </yds-pressable-shadow>
+        </div>
+      </div>
+      
+      <div 
+        style="height: 1500px">
+      </div>
+        
+      <div 
+        slot="footer" 
+        style="
+          background-color: #F8F8F8; 
+          height: 100px;">
+        <div class="center-content">
+          footer
+        </div>
+      </div>
+    </yds-scaffold>
   </body>
 </html>

@@ -14,6 +14,8 @@ export class YDSPageletHeader extends HTMLElement {
 
           margin-top: 8px;
           margin-bottom: 8px;
+
+          z-index: 99;
         }
         :host([shadowed~=true]) {
           box-shadow: 0px 2px 4px 0px rgba(240,240,240,1);
