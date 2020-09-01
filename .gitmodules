@@ -1,0 +1,3 @@
+[submodule "yz_design_system/yds-web-jsx"]
+	path = yz_design_system/yds-web-jsx
+	url = https://github.com/yuzuquats/yds-web-jsx

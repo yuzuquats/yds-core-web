@@ -1,1 +1,0 @@
-import { yz_card } from './components/yz_card.js';

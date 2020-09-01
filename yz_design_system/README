@@ -1,0 +1,18 @@
+---
+
+## Installation
+
+npm install -g typescript
+npm install -g babel-minify
+npm install -g browserify
+npm install -g esmify
+npm install -g browser-resolve
+
+// TODO: can't target es6 with constructor?
+tsc src/**/*.{ts,tsx,.d.ts} --jsx react --jsxFactory Jsx.createElement --jsxFragmentFactory Jsx.FRAGMENT --target es6
+browserify src/yds.mjs -p esmify -o build/yds.min.js
+minify build/yds.min.js -d . --sourceType module
+
+## Simple Server
+
+python3 -m http.server 8000
